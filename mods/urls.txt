@@ -16,3 +16,6 @@ https://cdn.modrinth.com/data/u6dRKJwZ/versions/9jqubC9n/jei-1.20.1-forge-15.56.
 
 # JourneyMap — latest 1.20.1 Forge release
 https://cdn.modrinth.com/data/lfHFW1mp/versions/HWDC99DO/journeymap-forge-1.20.1-6.0.7.jar
+
+# Server Login — server-only (cracked /login password). Do not put on clients.
+https://cdn.modrinth.com/data/HaOHFq81/versions/hfNV8isR/serverlogin-1.0.3.jar

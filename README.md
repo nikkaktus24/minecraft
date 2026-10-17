@@ -23,8 +23,11 @@ All of the requested mods have a 1.20.1 Forge build. Nothing was substituted.
 | Advanced Solar Panels (IC2 addon) | `advanced_solar_panels-4.3.1-1.20.1.jar` | [craftorio/ic2-advanced-solar-panels `4.3.1`](https://github.com/craftorio/ic2-advanced-solar-panels/releases/tag/4.3.1) | IC2 ≥ `2.10.26-ex120` |
 | Just Enough Items | `jei-1.20.1-forge-15.56.0.205.jar` | Modrinth version `9jqubC9n` (latest **release**) | none on this release |
 | JourneyMap | `journeymap-forge-1.20.1-6.0.7.jar` | Modrinth version `HWDC99DO` | none |
+| Server Login (server-only) | `serverlogin-1.0.3.jar` | Modrinth `hfNV8isR` | none — **not** installed on clients |
 
 JEI is pinned to the latest **release**, not the current beta line. Newer JEI betas require [MezzConfig](https://modrinth.com/mod/mezzconfig); that extra library is not needed with 15.56.0.205.
+
+**Access:** `online-mode=false` (cracked / no Microsoft license) so anyone can connect, **max 3 players**, and a join password via Server Login (vanilla has no server password). Default password is `SERVER_PASSWORD` (`ic2play` until you change it).
 
 IC2 / the addons are **not** on Modrinth or CurseForge for 1.20.1. The container pulls GitHub release URLs through itzg `MODS` (no API key). The same URLs live in `mods/urls.txt`. Checksums are in `mods/checksums.sha256`.
 
@@ -63,10 +66,14 @@ Copy `.env.example` → `.env` (compose CLI) or paste the keys into Portainer �
 | `VOLUME_PREFIX` | `mc-ic2` | Named volume prefix |
 | `UID` / `GID` | `1000` | Container process owner |
 | `TZ` | `UTC` | Timezone |
-| `MOTD`, `DIFFICULTY`, `MODE`, `ONLINE_MODE`, `MAX_PLAYERS`, `VIEW_DISTANCE`, `SIMULATION_DISTANCE`, `LEVEL` | see `.env.example` | Written to `server.properties` |
+| `MOTD`, `DIFFICULTY`, `MODE`, `VIEW_DISTANCE`, `SIMULATION_DISTANCE`, `LEVEL` | see `.env.example` | Written to `server.properties` |
+| `ONLINE_MODE` | `false` | Cracked / unlicensed clients allowed. **Not** the Mojang EULA (`EULA` must still be `TRUE`). |
+| `ENFORCE_SECURE_PROFILE` | `false` | Required when offline |
+| `MAX_PLAYERS` | `3` | Slot cap |
+| `SERVER_PASSWORD` | `ic2play` | Shared join password friends type with `/login` (change it) |
 | `MAX_TICK_TIME` | `-1` | Watchdog off (typical for modded) |
 | `USE_AIKAR_FLAGS` | `true` | JVM flags |
-| `ENABLE_RCON` / `RCON_PASSWORD` | `true` / `minecraft` | Internal stop; change the password |
+| `ENABLE_RCON` / `RCON_PASSWORD` | `true` / `ic2rcon` | Internal stop; do not publish 25575 |
 | `CF_API_KEY` / `MODRINTH_TOKEN` | unset | **Not required** for this stack |
 
 Split heap (`INIT_MEMORY` / `MAX_MEMORY`) is documented in `.env.example` if you want 4G–6G instead of a single `MEMORY`.
@@ -90,22 +97,26 @@ docker compose up -d
 
 Give the JVM **4–6G** plus ~1.5–2G extra on the host for non-heap / OS. 5G heap is the default.
 
-## Mods clients must install
+## Join password (cracked server)
 
-Players need **Minecraft 1.20.1 + Forge 47.4.20** (or the same `FORGE_VERSION` as the server).
+Vanilla Minecraft has no server password. This stack uses **Server Login** (server-only). After connecting:
 
-**Required to play the IC2 content** (install the same jars the server uses):
+```text
+/login ic2play ic2play     # first time (register)
+/login ic2play             # every later join
+```
 
-- `ic2-forge-2.10.33-ex120.jar`
-- `advanced_machines-61.0.3-1.20.1.jar`
-- `advanced_solar_panels-4.3.1-1.20.1.jar`
+Change `SERVER_PASSWORD` in Portainer / `.env` and tell your three players the new value. Do not put the password in the MOTD (the server list would show it).
 
-**Install on the client for those features** (server also has them):
+## Client install (including OptiFine)
 
-- `jei-1.20.1-forge-15.56.0.205.jar` — recipe browser
-- `journeymap-forge-1.20.1-6.0.7.jar` — map
+```bash
+./client/fetch-mods.sh
+./client/install-mods.sh
+# or: ./client/install-mods.sh "/path/to/.minecraft/mods"
+```
 
-Download links are in `mods/urls.txt`. `./scripts/fetch-mods.sh` pulls them into `mods/jars/` and checks sha256.
+Players need **Minecraft 1.20.1 + Forge 47.4.20**, then the jars in `client/` (IC2, both addons, JEI, JourneyMap, **OptiFine HD U I6**). OptiFine is **client-only** — never drop it in the server mods volume. Server Login is **server-only** — clients do not install it. Details: `client/README.md`.
 
 ## How to add mods
 
@@ -119,7 +130,9 @@ Remove a URL from `MODS` if you want itzg to stop managing that download. Back u
 
 | Script | Purpose |
 | --- | --- |
-| `scripts/fetch-mods.sh` | Download pinned jars to `mods/jars/` and `sha256sum -c` |
+| `client/fetch-mods.sh` | Download client jars (incl. OptiFine) into `client/mods/` |
+| `client/install-mods.sh` | Copy those jars into `.minecraft/mods` |
+| `scripts/fetch-mods.sh` | Download **server** jars to `mods/jars/` and `sha256sum -c` |
 | `scripts/validate-compose.sh` | Expand env defaults and parse/validate `docker-compose.yml` |
 
 ## License / attribution

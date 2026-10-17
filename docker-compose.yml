@@ -24,25 +24,31 @@ services:
       TZ: ${TZ:-UTC}
       UID: ${UID:-1000}
       GID: ${GID:-1000}
-      MOTD: ${MOTD:-IC2 Refactored 1.20.1}
+      MOTD: ${MOTD:-IC2 1.20.1 — /login after join}
       DIFFICULTY: ${DIFFICULTY:-normal}
       MODE: ${MODE:-survival}
-      ONLINE_MODE: ${ONLINE_MODE:-true}
-      MAX_PLAYERS: ${MAX_PLAYERS:-20}
+      # offline-mode so cracked / unlicensed clients can join (not the Mojang EULA)
+      ONLINE_MODE: "${ONLINE_MODE:-false}"
+      ENFORCE_SECURE_PROFILE: "${ENFORCE_SECURE_PROFILE:-false}"
+      MAX_PLAYERS: "${MAX_PLAYERS:-3}"
       VIEW_DISTANCE: ${VIEW_DISTANCE:-10}
       SIMULATION_DISTANCE: ${SIMULATION_DISTANCE:-10}
       LEVEL: ${LEVEL:-world}
       MAX_TICK_TIME: ${MAX_TICK_TIME:--1}
       ENABLE_RCON: ${ENABLE_RCON:-true}
-      RCON_PASSWORD: ${RCON_PASSWORD:-minecraft}
-      # Pinned 1.20.1 Forge jars. IC2 + addons come from GitHub releases;
-      # JEI + JourneyMap from Modrinth CDN. No CurseForge/Modrinth API key.
+      RCON_PASSWORD: ${RCON_PASSWORD:-ic2rcon}
+      # Shared join password for friends (tell them this; Minecraft has no vanilla password).
+      # First join: /login <SERVER_PASSWORD> <SERVER_PASSWORD>   later: /login <SERVER_PASSWORD>
+      SERVER_PASSWORD: ${SERVER_PASSWORD:-ic2play}
+      # Pinned 1.20.1 Forge jars. IC2 + addons from GitHub; JEI / JourneyMap / Server Login
+      # from Modrinth CDN. Server Login is server-only (no client install).
       MODS: |-
         https://github.com/craftorio/ic2/releases/download/2.10.33-ex120/ic2-forge-2.10.33-ex120.jar
         https://github.com/craftorio/ic2-advanced-machines/releases/download/61.0.3/advanced_machines-61.0.3-1.20.1.jar
         https://github.com/craftorio/ic2-advanced-solar-panels/releases/download/4.3.1/advanced_solar_panels-4.3.1-1.20.1.jar
         https://cdn.modrinth.com/data/u6dRKJwZ/versions/9jqubC9n/jei-1.20.1-forge-15.56.0.205.jar
         https://cdn.modrinth.com/data/lfHFW1mp/versions/HWDC99DO/journeymap-forge-1.20.1-6.0.7.jar
+        https://cdn.modrinth.com/data/HaOHFq81/versions/hfNV8isR/serverlogin-1.0.3.jar
     volumes:
       - minecraft-data:/data
       - minecraft-world:/data/world

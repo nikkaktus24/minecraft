@@ -66,10 +66,16 @@ needed = (
     "advanced_solar_panels-4.3.1-1.20.1.jar",
     "jei-1.20.1-forge-15.56.0.205.jar",
     "journeymap-forge-1.20.1-6.0.7.jar",
+    "serverlogin-1.0.3.jar",
 )
 missing = [name for name in needed if name not in mods]
 if missing:
     raise SystemExit(f"MODS is missing pinned jars: {missing}")
+online = str(env_block.get("ONLINE_MODE")).strip().lower()
+if online not in ("false", "0"):
+    raise SystemExit(f"expected ONLINE_MODE=false for cracked clients, got {env_block.get('ONLINE_MODE')}")
+if str(env_block.get("MAX_PLAYERS")) != "3":
+    raise SystemExit(f"expected MAX_PLAYERS=3, got {env_block.get('MAX_PLAYERS')}")
 if "volumes" not in data:
     raise SystemExit("compose YAML missing top-level volumes")
 for vol in ("minecraft-world", "minecraft-mods", "minecraft-config", "minecraft-logs"):
