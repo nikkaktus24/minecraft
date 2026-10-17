@@ -1,0 +1,5 @@
+.env
+*.jar
+mods/jars/
+data/
+.DS_Store

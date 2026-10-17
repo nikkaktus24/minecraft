@@ -1,0 +1,21 @@
+# Pinned Minecraft 1.20.1 / Forge mod jars. One URL per line.
+# Kept in sync with docker-compose.yml `environment.MODS`.
+# Used by scripts/fetch-mods.sh. The live server downloads via itzg MODS.
+
+# Industrial Craft 2: Refactored (craftorio/ic2) — Forge 1.20.1
+https://github.com/craftorio/ic2/releases/download/2.10.33-ex120/ic2-forge-2.10.33-ex120.jar
+
+# Advanced Machines (IC2 addon, craftorio/ic2-advanced-machines)
+https://github.com/craftorio/ic2-advanced-machines/releases/download/61.0.3/advanced_machines-61.0.3-1.20.1.jar
+
+# Advanced Solar Panels (IC2 addon, craftorio/ic2-advanced-solar-panels)
+https://github.com/craftorio/ic2-advanced-solar-panels/releases/download/4.3.1/advanced_solar_panels-4.3.1-1.20.1.jar
+
+# Just Enough Items — latest 1.20.1 Forge *release* (no extra required libs)
+https://cdn.modrinth.com/data/u6dRKJwZ/versions/9jqubC9n/jei-1.20.1-forge-15.56.0.205.jar
+
+# JourneyMap — latest 1.20.1 Forge release
+https://cdn.modrinth.com/data/lfHFW1mp/versions/HWDC99DO/journeymap-forge-1.20.1-6.0.7.jar
+
+# Server Login — server-only (cracked /login password). Do not put on clients.
+https://cdn.modrinth.com/data/HaOHFq81/versions/hfNV8isR/serverlogin-1.0.3.jar

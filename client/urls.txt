@@ -1,0 +1,27 @@
+# Client mods for Minecraft 1.20.1 / Forge, in install order.
+# Run: ./client/fetch-mods.sh   then   ./client/install-mods.sh
+# Jars land in client/mods/ (gitignored). Do not commit binaries.
+#
+# Lines:
+#   https://...          direct jar URL
+#   optifine:<filename>  official OptiFine download (adloadx scrape)
+#
+# OptiFine is CLIENT-ONLY. Never add it to the server stack.
+
+# 1. Industrial Craft 2: Refactored
+https://github.com/craftorio/ic2/releases/download/2.10.33-ex120/ic2-forge-2.10.33-ex120.jar
+
+# 2. Advanced Machines (IC2 addon)
+https://github.com/craftorio/ic2-advanced-machines/releases/download/61.0.3/advanced_machines-61.0.3-1.20.1.jar
+
+# 3. Advanced Solar Panels (IC2 addon)
+https://github.com/craftorio/ic2-advanced-solar-panels/releases/download/4.3.1/advanced_solar_panels-4.3.1-1.20.1.jar
+
+# 4. Just Enough Items
+https://cdn.modrinth.com/data/u6dRKJwZ/versions/9jqubC9n/jei-1.20.1-forge-15.56.0.205.jar
+
+# 5. JourneyMap
+https://cdn.modrinth.com/data/lfHFW1mp/versions/HWDC99DO/journeymap-forge-1.20.1-6.0.7.jar
+
+# 6. OptiFine HD U I6 — client only (official optifine.net)
+optifine:OptiFine_1.20.1_HD_U_I6.jar
