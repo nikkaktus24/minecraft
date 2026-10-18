@@ -24,8 +24,24 @@ All of the requested mods have a 1.20.1 Forge build. Nothing was substituted.
 | Just Enough Items | `jei-1.20.1-forge-15.56.0.205.jar` | Modrinth version `9jqubC9n` (latest **release**) | none on this release |
 | JourneyMap | `journeymap-forge-1.20.1-6.0.7.jar` | Modrinth version `HWDC99DO` | none |
 | Server Login (server-only) | `serverlogin-1.0.3.jar` | Modrinth `hfNV8isR` | none — **not** installed on clients |
+| TenshiLib | `tenshilib-1.20.1-1.7.6-forge.jar` | Modrinth `5elJ9ZTS` | hard dep of Improved Mobs |
+| Improved Mobs | `improvedmobs-1.20.1-1.13.7-forge.jar` | Modrinth `hQPzm4z2` | TenshiLib |
+| CoroUtil | `coroutil-forge-1.20.1-1.3.7.jar` | Modrinth `6rPDKAT8` | hard dep of Zombie Awareness |
+| Zombie Awareness | `zombieawareness-1.20.1-1.13.1.jar` | Modrinth `vmo9rLxO` | CoroUtil |
+| CorgiLib | `Corgilib-Forge-1.20.1-4.0.3.6.jar` | Modrinth `OtJzHtsl` | hard dep of Enhanced Celestials |
+| Data Anchor | `Data_Anchor-forge-1.20.1-1.0.0.23.jar` | Modrinth `ybaOCLNa` | hard dep of Enhanced Celestials |
+| Enhanced Celestials | `Enhanced-Celestials-forge-1.20.1-5.0.3.3.jar` | Modrinth `FU1k4KeY` | CorgiLib + Data Anchor |
+| Atlas Lib | `Atlas Lib-1.20.1-1.1.12.jar` | Modrinth `PKJi0BrP` | hard dep of The Hordes (filename contains a space) |
+| The Hordes | `The-Hordes-1.20.1-1.6.3i-all.jar` | Modrinth `WMyMpstF` | Atlas Lib |
 
 JEI is pinned to the latest **release**, not the current beta line. Newer JEI betas require [MezzConfig](https://modrinth.com/mod/mezzconfig); that extra library is not needed with 15.56.0.205.
+
+All four difficulty mods have a 1.20.1 Forge build. Extra jars are **hard dependencies only**:
+
+- **TenshiLib 1.7.6** is the latest *published* 1.20.1 Forge build (Improved Mobs requires TenshiLib).
+- **The Hordes** lists Atlas Lib as required. Modrinth version `WMyMpstF` points that required dep at Atlas `UekJfJ7l` (**1.12.2** `Atlas-Lib-1.12.2-1.1.11.jar`) — a metadata bug. This stack pins the matching **1.20.1** Atlas **1.1.12** (`PKJi0BrP`), not the 1.12.2 file. The `-all` Hordes jar does **not** shade Atlas.
+- **Game Stages** is an *optional* Hordes dep (event gating) and is **not** included. JEI is already in the pack (also optional for Hordes).
+- Fetch scripts URL-decode `Atlas%20Lib-…` so the on-disk name is `Atlas Lib-1.20.1-1.1.12.jar`.
 
 **Access:** `online-mode=false` (cracked / no Microsoft license) so anyone can connect, **max 3 players**, and a join password via Server Login (vanilla has no server password). Default password is `SERVER_PASSWORD` (`ic2play` until you change it).
 
@@ -84,7 +100,7 @@ Split heap (`INIT_MEMORY` / `MAX_MEMORY`) is documented in `.env.example` if you
 2. **Git repository** (preferred): point at this repo, compose path `docker-compose.yml`, branch as deployed. **Web editor**: paste `docker-compose.yml`.
 3. Under **Environment variables**, add every key from `.env.example`. Set **`EULA=TRUE`**.
 4. Confirm port mapping `25565:25565` (or your `SERVER_PORT`).
-5. Deploy. First boot downloads Forge 47.4.20 and the five mod jars (several minutes). Logs: container log or the `mc-ic2-logs` volume.
+5. Deploy. First boot downloads Forge 47.4.20 and the pinned server jars (several minutes). Logs: container log or the `mc-ic2-logs` volume.
 6. Connect with a **1.20.1 Forge** client (see below).
 
 CLI equivalent:
@@ -116,7 +132,7 @@ Change `SERVER_PASSWORD` in Portainer / `.env` and tell your three players the n
 # or: ./client/install-mods.sh "/path/to/.minecraft/mods"
 ```
 
-Players need **Minecraft 1.20.1 + Forge 47.4.20**, then the jars in `client/` (IC2, both addons, JEI, JourneyMap, **OptiFine HD U I6**). OptiFine is **client-only** — never drop it in the server mods volume. Server Login is **server-only** — clients do not install it. Details: `client/README.md`.
+Players need **Minecraft 1.20.1 + Forge 47.4.20**, then the jars in `client/` (IC2 pack, difficulty mods + their hard deps, **OptiFine HD U I6**). OptiFine is **client-only** — never drop it in the server mods volume. Server Login is **server-only** — clients do not install it. Details: `client/README.md`.
 
 ## How to add mods
 

@@ -46,7 +46,7 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     file="${line#optifine:}"
     fetch_optifine "$dest/$file" "$file"
   else
-    file="$(basename "${line%%\?*}")"
+    file="$(python3 -c 'import sys, urllib.parse; print(urllib.parse.unquote(sys.argv[1].rsplit("/", 1)[-1].split("?", 1)[0]))' "$line")"
     echo "  $n. $file"
     curl -fL --retry 3 --retry-delay 2 -o "$dest/$file" "$line"
   fi

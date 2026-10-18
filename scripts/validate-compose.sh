@@ -67,6 +67,15 @@ needed = (
     "jei-1.20.1-forge-15.56.0.205.jar",
     "journeymap-forge-1.20.1-6.0.7.jar",
     "serverlogin-1.0.3.jar",
+    "tenshilib-1.20.1-1.7.6-forge.jar",
+    "improvedmobs-1.20.1-1.13.7-forge.jar",
+    "coroutil-forge-1.20.1-1.3.7.jar",
+    "zombieawareness-1.20.1-1.13.1.jar",
+    "Corgilib-Forge-1.20.1-4.0.3.6.jar",
+    "Data_Anchor-forge-1.20.1-1.0.0.23.jar",
+    "Enhanced-Celestials-forge-1.20.1-5.0.3.3.jar",
+    "Atlas%20Lib-1.20.1-1.1.12.jar",
+    "The-Hordes-1.20.1-1.6.3i-all.jar",
 )
 missing = [name for name in needed if name not in mods]
 if missing:

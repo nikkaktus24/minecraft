@@ -19,12 +19,16 @@ if [[ ! -f "$sums_file" ]]; then
   exit 1
 fi
 
+url_filename() {
+  python3 -c 'import sys, urllib.parse; print(urllib.parse.unquote(sys.argv[1].rsplit("/", 1)[-1].split("?", 1)[0]))' "$1"
+}
+
 echo "Downloading mods into $dest"
 while IFS= read -r line || [[ -n "$line" ]]; do
   line="${line%%$'\r'}"
   [[ -z "$line" || "$line" == \#* ]] && continue
   url="$line"
-  file="$(basename "${url%%\?*}")"
+  file="$(url_filename "$url")"
   echo "  $file"
   curl -fL --retry 3 --retry-delay 2 -o "$dest/$file" "$url"
 done < "$urls_file"
