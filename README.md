@@ -59,15 +59,53 @@ Do **not** publish RCON (25575). The image uses RCON internally for a graceful s
 
 ## Named volumes
 
-| Compose volume | Docker volume name (default prefix `mc-ic2`) | Container path |
-| --- | --- | --- |
-| `minecraft-world` | `mc-ic2-world` | `/data/world` |
-| `minecraft-mods` | `mc-ic2-mods` | `/data/mods` |
-| `minecraft-config` | `mc-ic2-config` | `/data/config` |
-| `minecraft-logs` | `mc-ic2-logs` | `/data/logs` |
-| `minecraft-data` | `mc-ic2-data` | `/data` (Forge installer, libraries, `server.properties`, EULA, …) |
+One volume, prefix `VOLUME_PREFIX` (default `mc-ic2`):
 
-Change the prefix with `VOLUME_PREFIX`. Nested mounts mean the world/mods/config/logs volumes overlay those folders inside `/data`.
+| Compose volume | Docker volume name | Container path |
+| --- | --- | --- |
+| `minecraft-data` | `mc-ic2-data` | `/data` (world, mods, config, logs, Forge, `server.properties`, EULA) |
+
+World is `/data/world`, mods `/data/mods`, config `/data/config`, logs `/data/logs` **inside that volume**. Do **not** add nested mounts for those paths: Docker creates the extra volumes as root, itzg then skips `chown` when `/data` is already UID 1000, and Forge fails with `AccessDeniedException: /data/config/fml.toml`.
+
+Do **not** set compose/Portainer `user: "1000:1000"`. The image starts as root, itzg chowns `/data`, then drops to `UID`/`GID` (default 1000).
+
+### Repair existing root-owned volumes
+
+If this stack already ran with the old split volumes (`mc-ic2-config`, etc.), stop the stack in Portainer, then from the **Docker host** (SSH or Portainer host console). Change `mc-ic2` if you set `VOLUME_PREFIX`.
+
+```bash
+# Stop the Minecraft stack first. Then chown every volume this stack used:
+docker run --rm --user 0 \
+  -v mc-ic2-data:/data \
+  -v mc-ic2-world:/world \
+  -v mc-ic2-mods:/mods \
+  -v mc-ic2-config:/config \
+  -v mc-ic2-logs:/logs \
+  alpine:3.20 \
+  sh -c 'chown -R 1000:1000 /data /world /mods /config /logs && ls -ld /data /config /world /mods /logs'
+```
+
+If a name is missing, Docker creates an empty volume — that is harmless. Then **pull/redeploy this compose** (single `/data` mount). First-boot failures usually have no world yet; leftover `mc-ic2-world` / `mc-ic2-mods` / `mc-ic2-config` / `mc-ic2-logs` are unused after that.
+
+If you already had a world you want to keep, copy nested data into the single volume **before** starting the new compose:
+
+```bash
+docker run --rm --user 0 \
+  -v mc-ic2-data:/data \
+  -v mc-ic2-world:/from-world \
+  -v mc-ic2-mods:/from-mods \
+  -v mc-ic2-config:/from-config \
+  -v mc-ic2-logs:/from-logs \
+  alpine:3.20 \
+  sh -c 'mkdir -p /data/world /data/mods /data/config /data/logs
+    cp -a /from-world/. /data/world/
+    cp -a /from-mods/. /data/mods/
+    cp -a /from-config/. /data/config/
+    cp -a /from-logs/. /data/logs/
+    chown -R 1000:1000 /data'
+```
+
+Redeploy, and keep `EULA=TRUE` in the stack env until that default is on the branch you pull.
 
 ## Environment
 
@@ -75,7 +113,7 @@ Copy `.env.example` → `.env` (compose CLI) or paste the keys into Portainer �
 
 | Variable | Default | Notes |
 | --- | --- | --- |
-| `EULA` | `FALSE` | Must be `TRUE` |
+| `EULA` | `TRUE` | Mojang EULA. Compose defaults this so Portainer Git/paste works without extra env. Override with `EULA=FALSE` if you must refuse. **Not** `ONLINE_MODE`. |
 | `MEMORY` | `5G` | JVM heap; intended range **4–6G** |
 | `SERVER_PORT` | `25565` | Host TCP port |
 | `FORGE_VERSION` | `47.4.20` | Forge build |
@@ -98,16 +136,16 @@ Split heap (`INIT_MEMORY` / `MAX_MEMORY`) is documented in `.env.example` if you
 
 1. In Portainer: **Stacks → Add stack**.
 2. **Git repository** (preferred): point at this repo, compose path `docker-compose.yml`, branch as deployed. **Web editor**: paste `docker-compose.yml`.
-3. Under **Environment variables**, add every key from `.env.example`. Set **`EULA=TRUE`**.
+3. Under **Environment variables**, optionally paste keys from `.env.example` (`MEMORY`, `SERVER_PASSWORD`, …). **`EULA` is already `TRUE` in compose** — Portainer Git does not load `.env.example`, so you do not need to add it unless you want to override (`EULA=FALSE` refuses the Mojang EULA and the container will exit).
 4. Confirm port mapping `25565:25565` (or your `SERVER_PORT`).
-5. Deploy. First boot downloads Forge 47.4.20 and the pinned server jars (several minutes). Logs: container log or the `mc-ic2-logs` volume.
+5. Deploy. First boot downloads Forge 47.4.20 and the pinned server jars (several minutes). Logs: container log (or `/data/logs` inside `mc-ic2-data`).
 6. Connect with a **1.20.1 Forge** client (see below).
 
 CLI equivalent:
 
 ```bash
 cp .env.example .env
-# set EULA=TRUE in .env
+# EULA=TRUE is already in .env.example / compose
 docker compose up -d
 ```
 
@@ -137,10 +175,10 @@ Players need **Minecraft 1.20.1 + Forge 47.4.20**, then the jars in `client/` (I
 ## How to add mods
 
 1. **Preferred:** append a jar URL to `environment.MODS` in `docker-compose.yml` (and to `mods/urls.txt` if you keep that file in sync). Redeploy the stack. itzg downloads it into `/data/mods`.
-2. **Drop a jar** into the `mc-ic2-mods` volume (Portainer → Volumes, or `docker cp`). Use 1.20.1 **Forge** jars only. Restart the container.
+2. **Drop a jar** into `/data/mods` on the `mc-ic2-data` volume (Portainer → Volumes, or `docker cp`). Use 1.20.1 **Forge** jars only. Restart the container.
 3. Optional local verify: `./scripts/fetch-mods.sh` then copy extra jars into that folder; do not commit `.jar` files.
 
-Remove a URL from `MODS` if you want itzg to stop managing that download. Back up the mods volume before pruning.
+Remove a URL from `MODS` if you want itzg to stop managing that download. Back up the data volume before pruning.
 
 ## Helper scripts
 
