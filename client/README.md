@@ -26,9 +26,17 @@ Jars are stored in `client/mods/` after fetch (gitignored).
 3. `advanced_solar_panels-4.3.1-1.20.1.jar`
 4. `jei-1.20.1-forge-15.56.0.205.jar`
 5. `journeymap-forge-1.20.1-6.0.7.jar`
-6. `OptiFine_1.20.1_HD_U_I6.jar` — **client only**, not on the server
+6. `tenshilib-1.20.1-1.7.6-forge.jar` — hard dep of Improved Mobs
+7. `improvedmobs-1.20.1-1.13.7-forge.jar`
+8. `coroutil-forge-1.20.1-1.3.7.jar` — hard dep of Zombie Awareness
+9. `zombieawareness-1.20.1-1.13.1.jar`
+10. `Corgilib-Forge-1.20.1-4.0.3.6.jar` and `Data_Anchor-forge-1.20.1-1.0.0.23.jar` — hard deps of Enhanced Celestials
+11. `Enhanced-Celestials-forge-1.20.1-5.0.3.3.jar`
+12. `Atlas Lib-1.20.1-1.1.12.jar` — hard dep of The Hordes (space in the filename)
+13. `The-Hordes-1.20.1-1.6.3i-all.jar`
+14. `OptiFine_1.20.1_HD_U_I6.jar` — **client only**, not on the server
 
-URLs: `client/urls.txt`. Checksums: `client/checksums.sha256`.
+Server Login is **server-only** and is not in this list. URLs: `client/urls.txt`. Checksums: `client/checksums.sha256`.
 
 ## Before first launch
 

@@ -19,3 +19,29 @@ https://cdn.modrinth.com/data/lfHFW1mp/versions/HWDC99DO/journeymap-forge-1.20.1
 
 # Server Login — server-only (cracked /login password). Do not put on clients.
 https://cdn.modrinth.com/data/HaOHFq81/versions/hfNV8isR/serverlogin-1.0.3.jar
+
+# TenshiLib (hard dep of Improved Mobs)
+https://cdn.modrinth.com/data/P2rffivS/versions/5elJ9ZTS/tenshilib-1.20.1-1.7.6-forge.jar
+
+# Improved Mobs
+https://cdn.modrinth.com/data/23MovWyi/versions/hQPzm4z2/improvedmobs-1.20.1-1.13.7-forge.jar
+
+# CoroUtil (hard dep of Zombie Awareness)
+https://cdn.modrinth.com/data/rLLJ1OZM/versions/6rPDKAT8/coroutil-forge-1.20.1-1.3.7.jar
+
+# Zombie Awareness
+https://cdn.modrinth.com/data/mMTOWOaA/versions/vmo9rLxO/zombieawareness-1.20.1-1.13.1.jar
+
+# CorgiLib + Data Anchor (hard deps of Enhanced Celestials)
+https://cdn.modrinth.com/data/ziOp6EO8/versions/OtJzHtsl/Corgilib-Forge-1.20.1-4.0.3.6.jar
+https://cdn.modrinth.com/data/z2XEADmE/versions/ybaOCLNa/Data_Anchor-forge-1.20.1-1.0.0.23.jar
+
+# Enhanced Celestials
+https://cdn.modrinth.com/data/2rL16t1O/versions/FU1k4KeY/Enhanced-Celestials-forge-1.20.1-5.0.3.3.jar
+
+# Atlas Lib (hard dep of The Hordes). Filename has a space.
+# Hordes version WMyMpstF wrongly lists Atlas UekJfJ7l (1.12.2); pin 1.20.1 1.1.12.
+https://cdn.modrinth.com/data/G6VHtQr4/versions/PKJi0BrP/Atlas%20Lib-1.20.1-1.1.12.jar
+
+# The Hordes
+https://cdn.modrinth.com/data/O3HDffUR/versions/WMyMpstF/The-Hordes-1.20.1-1.6.3i-all.jar
