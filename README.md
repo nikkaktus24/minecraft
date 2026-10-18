@@ -113,6 +113,19 @@ docker compose up -d
 
 Give the JVM **4–6G** plus ~1.5–2G extra on the host for non-heap / OS. 5G heap is the default.
 
+## Run without Docker (local host)
+
+Same pack on the machine, no Portainer volumes. Needs **Java 17**, `curl`, `python3`. Linux first; Windows via Git Bash / WSL (`local/README.md`).
+
+```bash
+./local/install.sh
+./local/start.sh
+# stop: ./local/stop.sh
+# attached: ./local/start.sh --fg
+```
+
+Writes `local/server/eula.txt` (`eula=true`), `online-mode=false`, `max-players=3`. Join password is `SERVER_PASSWORD` (default `ic2play`) — `/login ic2play ic2play` then `/login ic2play`. OptiFine is not installed here. Mods come from `scripts/fetch-mods.sh` / `mods/urls.txt`. This does **not** change `docker-compose.yml`.
+
 ## Join password (cracked server)
 
 Vanilla Minecraft has no server password. This stack uses **Server Login** (server-only). After connecting:
@@ -148,6 +161,8 @@ Remove a URL from `MODS` if you want itzg to stop managing that download. Back u
 | --- | --- |
 | `client/fetch-mods.sh` | Download client jars (incl. OptiFine) into `client/mods/` |
 | `client/install-mods.sh` | Copy those jars into `.minecraft/mods` |
+| `local/install.sh` | Local Forge 47.4.20 server + server mods (no Docker) |
+| `local/start.sh` / `local/stop.sh` | Run / stop that server (`--fg` attached) |
 | `scripts/fetch-mods.sh` | Download **server** jars to `mods/jars/` and `sha256sum -c` |
 | `scripts/validate-compose.sh` | Expand env defaults and parse/validate `docker-compose.yml` |
 
