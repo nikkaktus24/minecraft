@@ -1,5 +1,6 @@
 # Portainer-ready Minecraft 1.20.1 Forge stack (IC2: Refactored + addons).
-# Deploy as a Portainer stack (Git or Web editor). Set EULA=TRUE before start.
+# Deploy as a Portainer stack (Git or Web editor). EULA defaults to TRUE
+# (Mojang EULA — not ONLINE_MODE). Override with EULA=FALSE if needed.
 #
 # Mod URLs are listed in `environment.MODS` so a Portainer Web-editor paste
 # works without cloning this repo. The same list is in mods/urls.txt for
@@ -15,7 +16,7 @@ services:
     ports:
       - "${SERVER_PORT:-25565}:25565"
     environment:
-      EULA: ${EULA:-FALSE}
+      EULA: "${EULA:-TRUE}"
       TYPE: FORGE
       VERSION: "1.20.1"
       FORGE_VERSION: ${FORGE_VERSION:-47.4.20}

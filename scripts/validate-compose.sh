@@ -55,6 +55,10 @@ if not isinstance(env_block, dict):
 for key in ("EULA", "TYPE", "VERSION", "MEMORY", "MODS"):
     if key not in env_block:
         raise SystemExit(f"minecraft environment missing {key}")
+if "${EULA:-TRUE}" not in text:
+    raise SystemExit("compose must default EULA to TRUE for Portainer Git/paste (expected ${EULA:-TRUE})")
+if str(env_block.get("EULA")).upper() not in ("TRUE", "1"):
+    raise SystemExit(f"expected EULA=TRUE, got {env_block.get('EULA')}")
 if str(env_block.get("TYPE")).upper() != "FORGE":
     raise SystemExit(f"expected TYPE=FORGE, got {env_block.get('TYPE')}")
 if str(env_block.get("VERSION")) != "1.20.1":
