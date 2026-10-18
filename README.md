@@ -75,7 +75,7 @@ Copy `.env.example` → `.env` (compose CLI) or paste the keys into Portainer �
 
 | Variable | Default | Notes |
 | --- | --- | --- |
-| `EULA` | `FALSE` | Must be `TRUE` |
+| `EULA` | `TRUE` | Mojang EULA. Compose defaults this so Portainer Git/paste works without extra env. Override with `EULA=FALSE` if you must refuse. **Not** `ONLINE_MODE`. |
 | `MEMORY` | `5G` | JVM heap; intended range **4–6G** |
 | `SERVER_PORT` | `25565` | Host TCP port |
 | `FORGE_VERSION` | `47.4.20` | Forge build |
@@ -98,7 +98,7 @@ Split heap (`INIT_MEMORY` / `MAX_MEMORY`) is documented in `.env.example` if you
 
 1. In Portainer: **Stacks → Add stack**.
 2. **Git repository** (preferred): point at this repo, compose path `docker-compose.yml`, branch as deployed. **Web editor**: paste `docker-compose.yml`.
-3. Under **Environment variables**, add every key from `.env.example`. Set **`EULA=TRUE`**.
+3. Under **Environment variables**, optionally paste keys from `.env.example` (`MEMORY`, `SERVER_PASSWORD`, …). **`EULA` is already `TRUE` in compose** — Portainer Git does not load `.env.example`, so you do not need to add it unless you want to override (`EULA=FALSE` refuses the Mojang EULA and the container will exit).
 4. Confirm port mapping `25565:25565` (or your `SERVER_PORT`).
 5. Deploy. First boot downloads Forge 47.4.20 and the pinned server jars (several minutes). Logs: container log or the `mc-ic2-logs` volume.
 6. Connect with a **1.20.1 Forge** client (see below).
@@ -107,7 +107,7 @@ CLI equivalent:
 
 ```bash
 cp .env.example .env
-# set EULA=TRUE in .env
+# EULA=TRUE is already in .env.example / compose
 docker compose up -d
 ```
 
