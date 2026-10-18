@@ -2,4 +2,6 @@
 *.jar
 mods/jars/
 data/
+local/server/
+local/cache/
 .DS_Store
