@@ -89,10 +89,19 @@ if online not in ("false", "0"):
     raise SystemExit(f"expected ONLINE_MODE=false for cracked clients, got {env_block.get('ONLINE_MODE')}")
 if str(env_block.get("MAX_PLAYERS")) != "3":
     raise SystemExit(f"expected MAX_PLAYERS=3, got {env_block.get('MAX_PLAYERS')}")
+if "user" in svc:
+    raise SystemExit('do not set services.minecraft.user (blocks itzg chown of /data)')
 if "volumes" not in data:
     raise SystemExit("compose YAML missing top-level volumes")
-for vol in ("minecraft-world", "minecraft-mods", "minecraft-config", "minecraft-logs"):
-    if vol not in data["volumes"]:
-        raise SystemExit(f"missing named volume {vol}")
+if "minecraft-data" not in data["volumes"]:
+    raise SystemExit("missing named volume minecraft-data")
+for nested in ("minecraft-world", "minecraft-mods", "minecraft-config", "minecraft-logs"):
+    if nested in data["volumes"]:
+        raise SystemExit(f"nested /data volume {nested} must not be declared (causes root-owned /data/config)")
+mounts = [str(v) for v in svc.get("volumes") or []]
+if not any(m == "minecraft-data:/data" or m.startswith("minecraft-data:/data:") for m in mounts):
+    raise SystemExit("services.minecraft must mount minecraft-data at /data")
+if any("/data/config" in m or "/data/world" in m or "/data/mods" in m or "/data/logs" in m for m in mounts):
+    raise SystemExit("do not nest mounts under /data")
 print(f"OK {compose_path} ({len(data['services'])} service, {len(data['volumes'])} volumes)")
 PY

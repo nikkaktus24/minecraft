@@ -2,6 +2,11 @@
 # Deploy as a Portainer stack (Git or Web editor). EULA defaults to TRUE
 # (Mojang EULA — not ONLINE_MODE). Override with EULA=FALSE if needed.
 #
+# One named volume on /data. Nested mounts under /data (especially
+# /data/config) stay root-owned when /data is already UID 1000, and Forge
+# then cannot write fml.toml. Do not set user: "1000:1000" — the image
+# must start as root so itzg can chown /data, then drop to UID/GID.
+#
 # Mod URLs are listed in `environment.MODS` so a Portainer Web-editor paste
 # works without cloning this repo. The same list is in mods/urls.txt for
 # scripts/fetch-mods.sh.
@@ -63,19 +68,7 @@ services:
         https://cdn.modrinth.com/data/O3HDffUR/versions/WMyMpstF/The-Hordes-1.20.1-1.6.3i-all.jar
     volumes:
       - minecraft-data:/data
-      - minecraft-world:/data/world
-      - minecraft-mods:/data/mods
-      - minecraft-config:/data/config
-      - minecraft-logs:/data/logs
 
 volumes:
   minecraft-data:
     name: ${VOLUME_PREFIX:-mc-ic2}-data
-  minecraft-world:
-    name: ${VOLUME_PREFIX:-mc-ic2}-world
-  minecraft-mods:
-    name: ${VOLUME_PREFIX:-mc-ic2}-mods
-  minecraft-config:
-    name: ${VOLUME_PREFIX:-mc-ic2}-config
-  minecraft-logs:
-    name: ${VOLUME_PREFIX:-mc-ic2}-logs
